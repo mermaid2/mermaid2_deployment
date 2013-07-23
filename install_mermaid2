@@ -1,0 +1,89 @@
+#!/bin/bash -x
+#==================================================#
+# BUILDS THE MERMAID2 DATABASE FROM A FRESH 
+# INSTALL OF UBUNTU
+# -------------------------------------------------#
+# USE
+#
+# sudo ./install
+#
+# CREDENTIAL FILE
+# LINE 1 #Comment
+# LINE 2 <username>
+# LINE 3 <password>
+#
+#==================================================#
+
+set -e
+
+
+CURRENT_DIR=$(pwd)
+GIT_REPO="ssh://langlois@192.168.1.64/common/mermaid2/mermaid2_db/"
+
+
+# read user data
+USER_HOME=$(eval echo ~${SUDO_USER})
+CREDFILE="${CURRENT_DIR}/mermaid2.cred"
+echo "expecting credential file in :: "${CURRENT_DIR}
+i=0
+while read line; do
+    param[$i]=$line
+    i=`expr $i + 1` 
+done < $CREDFILE
+
+U_NAME=${param[1]}
+PASSWORD=${param[2]} 
+
+echo "user=$U_NAME, password=$PASSWORD"
+
+# install dependencies
+. ./install_dependencies
+
+
+# create mermaid directory
+mkdir -p /home/mermaid2/
+cd /home/mermaid2/
+
+# pull the code from hodgkin
+git clone $GIT_REPO
+
+# create the postgis database template
+su postgres -c'createdb -E UTF8 -U postgres template_postgis'
+su postgres -c'psql -U postgres -d template_postgis -f /usr/share/postgresql/9.1/contrib/postgis-1.5/postgis.sql'
+su postgres -c'psql -U postgres -d template_postgis -f /usr/share/postgresql/9.1/contrib/postgis-1.5/spatial_ref_sys.sql'
+su postgres -c'psql -U postgres -d template_postgis -c"select postgis_lib_version();"'
+su postgres -c'psql -U postgres -d template_postgis -c "GRANT ALL ON geometry_columns TO PUBLIC;"'
+su postgres -c'psql -U postgres -d template_postgis -c "GRANT ALL ON spatial_ref_sys TO PUBLIC;"'
+su postgres -c'psql -U postgres -d template_postgis -c "GRANT ALL ON geography_columns TO PUBLIC;"'
+
+# set user rights
+su postgres -c "createuser -Rs -A -d -U postgres $U_NAME"
+su postgres -c "createdb -E utf8 -O $U_NAME -T template_postgis mermaid2"
+su postgres -c "psql -c \"ALTER USER $U_NAME WITH PASSWORD '$PASSWORD';\""
+
+sed -i "s/'USER': ''/'USER': '$U_NAME'/" /home/mermaid2/mermaid2_db/Mermaid2/Mermaid2/settings.py
+sed -i "s/'PASSWORD': ''/'PASSWORD': '$PASSWORD'/" /home/mermaid2/mermaid2_db/Mermaid2/Mermaid2/settings.py
+
+# fix tastypie file
+#chmod 777 /usr/local/lib/python2.7/dist-packages/tastypie/
+#chmod 666 /usr/local/lib/python2.7/dist-packages/tastypie/resources.py
+sed -i "s/field_object.dehydrate(bundle, for_list=for_list)/field_object.dehydrate(bundle)/" /usr/local/lib/python2.7/dist-packages/tastypie/resources.py
+
+# launch django server
+cd /home/mermaid2/mermaid2_db/Mermaid2/
+python manage.py syncdb
+python manage.py runserver
+
+
+
+
+
+
+
+
+
+
+
+
+
+

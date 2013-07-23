@@ -1,0 +1,15 @@
+#!/bin/bash -x
+
+# install dependencies
+apt-get install -y python 
+apt-get install -y postgresql-9.1 
+apt-get install -y python-setuptools 
+#apt-get install -y postgresql-server-dev-9.1 
+apt-get install -y postgresql-9.1-postgis 
+apt-get install -y postgis 
+apt-get install -y python-psycopg2 
+apt-get install -y git 
+apt-get install -y python-gdal 
+
+easy_install pip
+pip install -r requirements.txt

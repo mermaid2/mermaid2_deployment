@@ -1,0 +1,7 @@
+django
+django-nose
+model_mommy==0.8.1
+django-tastypie 
+requests
+psycopg2
+geojson
