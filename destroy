@@ -1,0 +1,24 @@
+#!/bin/bash -x
+
+CATAMI_DIR="/home/mermaid2"
+
+#read credential file
+CREDFILE="${CURRENT_DIR}/mermaid2.cred"
+echo "expecting credential file in :: "${CURRENT_DIR}
+i=0
+while read line; do
+    param[$i]=$line
+    i=`expr $i + 1` 
+done < $CREDFILE
+
+U_NAME=${param[1]}
+PASSWORD=${param[2]} 
+
+echo "user=$U_NAME, password=$PASSWORD"
+
+#destroy database, template and user
+echo "Destroying database, test database and superuser" 
+su postgres -c "dropdb mermaid2"
+su postgres -c "psql -U postgres -d postgres -c \"UPDATE pg_database SET datistemplate='false' WHERE datname='template_postgis';"\"
+su postgres -c "dropdb template_postgis"
+su postgres -c "dropuser $U_NAME"

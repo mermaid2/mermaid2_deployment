@@ -16,7 +16,6 @@
 
 set -e
 
-
 CURRENT_DIR=$(pwd)
 GIT_REPO="ssh://langlois@192.168.1.64/common/mermaid2/mermaid2_db/"
 
@@ -70,7 +69,7 @@ sed -i "s/field_object.dehydrate(bundle, for_list=for_list)/field_object.dehydra
 # launch django server
 cd /home/mermaid2/mermaid2_db/Mermaid2/
 python manage.py syncdb
-python manage.py runserver
+python manage.py runserver 
 
 
 
