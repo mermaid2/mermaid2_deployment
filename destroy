@@ -1,6 +1,6 @@
 #!/bin/bash -x
 
-CATAMI_DIR="/home/mermaid2"
+MERMAID2_DIR="/home/mermaid2"
 
 #read credential file
 CREDFILE="${CURRENT_DIR}/mermaid2.cred"
@@ -22,3 +22,10 @@ su postgres -c "dropdb mermaid2"
 su postgres -c "psql -U postgres -d postgres -c \"UPDATE pg_database SET datistemplate='false' WHERE datname='template_postgis';"\"
 su postgres -c "dropdb template_postgis"
 su postgres -c "dropuser $U_NAME"
+
+#remove directory
+echo "removing "$MERMAID2_DIR
+
+if [ -d $MERMAID2_DIR ]; then
+    rm -r $MERMAID2_DIR
+fi
