@@ -17,7 +17,7 @@
 set -e
 
 CURRENT_DIR=$(pwd)
-GIT_REPO="ssh://langlois@192.168.1.64/common/mermaid2/mermaid2_db/"
+GIT_REPO="https://github.com/mermaid2/mermaid2.git"
 
 
 # read user data
