@@ -67,7 +67,7 @@ sed -i "s/'PASSWORD': ''/'PASSWORD': '$PASSWORD'/" /home/mermaid2/mermaid2/Merma
 sed -i "s/field_object.dehydrate(bundle, for_list=for_list)/field_object.dehydrate(bundle)/" /usr/local/lib/python2.7/dist-packages/tastypie/resources.py
 
 # launch django server
-cd /home/mermaid2/mermaid2_db/Mermaid2/
+cd /home/mermaid2/mermaid2/Mermaid2/
 python manage.py test
 #python manage.py syncdb
 #python manage.py runserver 
