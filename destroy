@@ -1,7 +1,7 @@
 #!/bin/bash -x
 
 MERMAID2_DIR="/home/mermaid2"
-
+CURRENT_DIR=$(pwd)
 #read credential file
 CREDFILE="${CURRENT_DIR}/mermaid2.cred"
 echo "expecting credential file in :: "${CURRENT_DIR}
