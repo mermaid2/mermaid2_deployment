@@ -60,16 +60,17 @@ su postgres -c "createuser -Rs -A -d -U postgres $U_NAME"
 su postgres -c "createdb -E utf8 -O $U_NAME -T template_postgis mermaid2"
 su postgres -c "psql -c \"ALTER USER $U_NAME WITH PASSWORD '$PASSWORD';\""
 
-sed -i "s/'USER': ''/'USER': '$U_NAME'/" /home/mermaid2/mermaid2_db/Mermaid2/Mermaid2/settings.py
-sed -i "s/'PASSWORD': ''/'PASSWORD': '$PASSWORD'/" /home/mermaid2/mermaid2_db/Mermaid2/Mermaid2/settings.py
+sed -i "s/'USER': ''/'USER': '$U_NAME'/" /home/mermaid2/mermaid2/Mermaid2/Mermaid2/settings.py
+sed -i "s/'PASSWORD': ''/'PASSWORD': '$PASSWORD'/" /home/mermaid2/mermaid2/Mermaid2/Mermaid2/settings.py
 
 # fix tastypie file
 sed -i "s/field_object.dehydrate(bundle, for_list=for_list)/field_object.dehydrate(bundle)/" /usr/local/lib/python2.7/dist-packages/tastypie/resources.py
 
 # launch django server
 cd /home/mermaid2/mermaid2_db/Mermaid2/
-python manage.py syncdb
-python manage.py runserver 
+python manage.py test
+#python manage.py syncdb
+#python manage.py runserver 
 
 
 
