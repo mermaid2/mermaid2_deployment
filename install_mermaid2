@@ -28,7 +28,7 @@ i=0
 while read line; do
     param[$i]=$line
     i=`expr $i + 1` 
-done < $CREDFILE
+done < "$CREDFILE"
 
 U_NAME=${param[1]}
 PASSWORD=${param[2]} 
