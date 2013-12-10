@@ -1,4 +1,4 @@
-django==1.4.5
+django==1.4
 django-nose
 model_mommy==0.8.1
 django-tastypie 
